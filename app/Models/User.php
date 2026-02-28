@@ -46,4 +46,55 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function lessonProgresses()
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments')
+            ->withPivot('enrolled_at', 'completed_at')
+            ->withTimestamps();
+    }
+
+    public function completedCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments')
+            ->whereNotNull('completed_at')
+            ->withPivot('enrolled_at', 'completed_at')
+            ->withTimestamps();
+    }
+
+    public function isEnrolledIn(Course $course)
+    {
+        return $this->enrollments()->where('course_id', $course->id)->exists();
+    }
+
+    public function hasCompletedCourse(Course $course)
+    {
+        return $this->enrollments()
+            ->where('course_id', $course->id)
+            ->whereNotNull('completed_at')
+            ->exists();
+    }
+
+    public function getLessonProgress(Lesson $lesson)
+    {
+        return $this->lessonProgresses()->where('lesson_id', $lesson->id)->first();
+    }
+
+    public function hasCompletedLesson(Lesson $lesson)
+    {
+        return $this->lessonProgresses()
+            ->where('lesson_id', $lesson->id)
+            ->whereNotNull('completed_at')
+            ->exists();
+    }
 }

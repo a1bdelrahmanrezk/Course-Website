@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('order');
             $table->integer('duration_seconds');
             $table->boolean('is_free_preview')->default(false);
+            $table->string('video_url')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

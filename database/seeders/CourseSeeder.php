@@ -27,14 +27,16 @@ class CourseSeeder extends Seeder
                     [
                         'title' => 'Lesson 1',
                         'order' => 1,
-                        'duration_seconds' => 60,
+                        'duration_seconds' => 600,
                         'is_free_preview' => true,
+                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                     ],
                     [
                         'title' => 'Lesson 2',
                         'order' => 2,
-                        'duration_seconds' => 60,
+                        'duration_seconds' => 900,
                         'is_free_preview' => false,
+                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
                     ]
                 ],
             ],
@@ -50,26 +52,33 @@ class CourseSeeder extends Seeder
                     [
                         'title' => 'Lesson 1',
                         'order' => 1,
-                        'duration_seconds' => 60,
+                        'duration_seconds' => 800,
                         'is_free_preview' => false,
+                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
                     ],
                     [
                         'title' => 'Lesson 2',
                         'order' => 2,
-                        'duration_seconds' => 60,
+                        'duration_seconds' => 700,
                         'is_free_preview' => true,
+                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
                     ]
                 ],
             ]
         ];
 
-        foreach($courses as $course){
+        foreach ($courses as $course) {
             $courseData = $course['data'];
             $lessons = $course['lessons'];
 
             $createdCourse = Course::create($courseData);
 
-            foreach($lessons as $lesson){
+            $createdCourse->addMedia(public_path('assets/images/test.jpg'))
+                ->preservingOriginal()
+                ->withCustomProperties(['type' => 'image'])
+                ->toMediaCollection('courses');
+
+            foreach ($lessons as $lesson) {
                 $lesson['course_id'] = $createdCourse->id;
                 Lesson::create($lesson);
             }

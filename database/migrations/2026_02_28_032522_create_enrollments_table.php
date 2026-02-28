@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->foreignId('course_id')->constrained('courses', 'id');
-            $table->timestamp('enrolled_at');
-            $table->timestamp('completed_at');
+            $table->timestamp('enrolled_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
             $table->unique(['user_id', 'course_id']);
