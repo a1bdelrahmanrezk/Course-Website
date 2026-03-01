@@ -16,19 +16,36 @@ new #[Layout('layouts.guest')] class extends Component
     {
         $this->validate();
 
-        $this->form->authenticate();
+        try {
+            $this->form->authenticate();
 
-        Session::regenerate();
+            Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            throw $e;
+        } catch (\Exception $e) {
+            // Handle other authentication errors
+            session()->flash('error', 'Login failed. Please try again.');
+            $this->addError('form.email', 'Invalid credentials');
+        }
     }
 }; ?>
 
 <div>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
+    
+    <!-- Error Messages -->
+    @if (session('error'))
+        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <form wire:submit="login">
+        @csrf
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
@@ -56,14 +73,22 @@ new #[Layout('layouts.guest')] class extends Component
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-between mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+            
+            @if (Route::has('register'))
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}" wire:navigate>
+                    {{ __('Register') }}
+                </a>
+            @endif
+        </div>
 
-            <x-primary-button class="ms-3">
+        <div class="flex items-center justify-end mt-4">
+            <x-primary-button>
                 {{ __('Log in') }}
             </x-primary-button>
         </div>

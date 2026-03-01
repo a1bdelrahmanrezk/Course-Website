@@ -54,14 +54,12 @@ class CourseSeeder extends Seeder
                         'order' => 1,
                         'duration_seconds' => 800,
                         'is_free_preview' => false,
-                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
                     ],
                     [
                         'title' => 'Lesson 2',
                         'order' => 2,
                         'duration_seconds' => 700,
                         'is_free_preview' => true,
-                        'video_url' => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
                     ]
                 ],
             ]
@@ -80,7 +78,11 @@ class CourseSeeder extends Seeder
 
             foreach ($lessons as $lesson) {
                 $lesson['course_id'] = $createdCourse->id;
-                Lesson::create($lesson);
+                $lesson = Lesson::create($lesson);
+                $lesson->addMedia(public_path('assets/videos/test.mp4'))
+                    ->preservingOriginal()
+                    ->withCustomProperties(['type' => 'video'])
+                    ->toMediaCollection('lessons');
             }
         }
     }

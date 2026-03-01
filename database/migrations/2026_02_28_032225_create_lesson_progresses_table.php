@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users', 'id');
             $table->foreignId('lesson_id')->constrained('lessons', 'id');
-            $table->timestamp('started_at');
-            $table->timestamp('completed_at');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->bigInteger('watch_seconds')->default(0);
             $table->softDeletes();
             $table->timestamps();

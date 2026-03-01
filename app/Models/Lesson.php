@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Lesson extends Model
+class Lesson extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $fillable = [
         'course_id',
         'title',
@@ -51,5 +54,10 @@ class Lesson extends Model
         $minutes = floor($this->duration_seconds / 60);
         $seconds = $this->duration_seconds % 60;
         return sprintf('%d:%02d', $minutes, $seconds);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('lessons');
     }
 }

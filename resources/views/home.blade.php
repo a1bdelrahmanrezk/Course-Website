@@ -93,15 +93,15 @@
 
                         <!-- Action Buttons -->
                         <div class="flex space-x-3">
-                            <a href="#" class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200" style="color:#374151 !important;">
+                            <a href="{{ route('courses.show', $course->slug) }}" class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200" style="color:#374151 !important;">
                                 {{ __('View Details') }}
                             </a>
 
                             @if(auth()->check())
                                         @if(auth()->user()->isEnrolledIn($course))
-                                            <button class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200" style="background-color:#37415161 !important;">
+                                            <a href="{{ route('courses.show', $course->slug) }}" class="flex-1 bg-green-600 text-white text-center py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200" style="background-color:#37415161 !important;">
                                                 {{ __('Continue') }}
-                                            </button>
+                                            </a>
                                         @else
                                             <form action="{{ route('enroll', $course->id) }}" method="POST" class="flex-1">
                                                 @csrf
