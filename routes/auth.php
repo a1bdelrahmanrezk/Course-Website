@@ -1,8 +1,22 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Livewire\Volt\Volt;
+
+// Breeze route aliases
+Route::get('breeze/login', function () {
+    return redirect()->route('login');
+})->name('breeze.login');
+
+Route::post('breeze/logout', function () {
+    Auth::guard('web')->logout();
+    Session::invalidate();
+    Session::regenerateToken();
+    return redirect('/');
+})->name('breeze.logout');
 
 Route::middleware('guest')->group(function () {
     Volt::route('register', 'pages.auth.register')

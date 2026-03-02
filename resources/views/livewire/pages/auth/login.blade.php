@@ -21,7 +21,7 @@ new #[Layout('layouts.guest')] class extends Component
 
             Session::regenerate();
 
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('dashboard', absolute: false));
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             throw $e;
@@ -44,7 +44,7 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
     @endif
 
-    <form wire:submit="login">
+    <form wire:submit="login" method="POST">
         @csrf
         <!-- Email Address -->
         <div>
@@ -88,7 +88,7 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+            <x-primary-button type="submit">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
